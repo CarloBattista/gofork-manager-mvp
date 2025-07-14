@@ -1,6 +1,178 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 
+@theme {
+  /* Primary */
+  --primary---white: rgba(255, 255, 255, 1);
+  --primary---black: rgba(0, 0, 0, 1);
+
+  /* Grey */
+  --grey--50: rgba(250, 250, 250, 1);
+  --grey--100: rgba(246, 247, 249, 1);
+  --grey--200: rgba(229, 231, 234, 1);
+  --grey--300: rgba(206, 210, 214, 1);
+  --grey--400: rgba(158, 165, 173, 1);
+  --grey--500: rgba(103, 110, 118, 1);
+  --grey--600: rgba(89, 96, 102, 1);
+  --grey--700: rgba(69, 76, 82, 1);
+  --grey--800: rgba(56, 63, 69, 1);
+  --grey--900: rgba(36, 41, 46, 1);
+  --grey--1000: rgba(26, 29, 31, 1);
+
+  /* Error */
+  --error--50: rgba(255, 251, 250, 1);
+  --error--100: rgba(254, 242, 242, 1);
+  --error--200: rgba(253, 233, 233, 1);
+  --error--300: rgba(250, 199, 199, 1);
+  --error--400: rgba(247, 161, 161, 1);
+  --error--500: rgba(243, 115, 115, 1);
+  --error--600: rgba(243, 65, 65, 1);
+  --error--700: rgba(205, 54, 54, 1);
+  --error--800: rgba(163, 46, 46, 1);
+  --error--900: rgba(124, 35, 35, 1);
+  --error--1000: rgba(96, 27, 27, 1);
+
+  /* Warning */
+  --warning--50: rgba(255, 252, 245, 1);
+  --warning--100: rgba(254, 250, 245, 1);
+  --warning--200: rgba(251, 242, 203, 1);
+  --warning--300: rgba(253, 229, 126, 1);
+  --warning--400: rgba(255, 209, 106, 1);
+  --warning--500: rgba(251, 188, 85, 1);
+  --warning--600: rgba(233, 162, 59, 1);
+  --warning--700: rgba(200, 129, 26, 1);
+  --warning--800: rgba(163, 92, 0, 1);
+  --warning--900: rgba(139, 68, 0, 1);
+  --warning--1000: rgba(120, 49, 11, 1);
+
+  /* Success */
+  --success--50: rgba(246, 254, 249, 1);
+  --success--100: rgba(239, 253, 246, 1);
+  --success--200: rgba(217, 249, 230, 1);
+  --success--300: rgba(184, 241, 210, 1);
+  --success--400: rgba(142, 228, 186, 1);
+  --success--500: rgba(106, 208, 157, 1);
+  --success--600: rgba(83, 180, 131, 1);
+  --success--700: rgba(47, 148, 97, 1);
+  --success--800: rgba(47, 118, 87, 1);
+  --success--900: rgba(37, 94, 70, 1);
+  --success--1000: rgba(30, 77, 58, 1);
+
+  /* Titles */
+  --titles--lg---black: 120px;
+  --titles--lg---exta--bold: 120px;
+  --titles--lg---bold: 120px;
+  --titles--lg---semi--bold: 120px;
+  --titles--lg---medium: 120px;
+  --titles--lg---regular: 120px;
+  --titles--lg---light: 120px;
+  --titles--sm---black: 96px;
+  --titles--sm---extra--bold: 96px;
+  --titles--sm---bold: 96px;
+  --titles--sm---semi--bold: 96px;
+  --titles--sm---medium: 96px;
+  --titles--sm---regular: 96px;
+  --titles--sm---light: 96px;
+
+  /* Headings */
+  --headings--2xl---black: 72px;
+  --headings--2xl---extra--bold: 72px;
+  --headings--2xl---bold: 72px;
+  --headings--2xl---semi--bold: 72px;
+  --headings--2xl---medium: 72px;
+  --headings--2xl---regular: 72px;
+  --headings--2xl---light: 72px;
+  --headings--xl---black: 60px;
+  --headings--xl---extra--bold: 60px;
+  --headings--xl---bold: 60px;
+  --headings--xl---semi--bold: 60px;
+  --headings--xl---medium: 60px;
+  --headings--xl---regular: 60px;
+  --headings--xl---light: 60px;
+  --headings--lg---black: 48px;
+  --headings--lg---extra--bold: 48px;
+  --headings--lg---bold: 48px;
+  --headings--lg---semi--bold: 48px;
+  --headings--lg---medium: 48px;
+  --headings--lg---regular: 48px;
+  --headings--lg---light: 48px;
+  --headings--md---black: 36px;
+  --headings--md---extra--bold: 36px;
+  --headings--md---bold: 36px;
+  --headings--md---semi--bold: 36px;
+  --headings--md---medium: 36px;
+  --headings--md---regular: 36px;
+  --headings--md---light: 36px;
+  --headings--sm---black: 30px;
+  --headings--sm---extra--bold: 30px;
+  --headings--sm---bold: 30px;
+  --headings--sm---semi--bold: 30px;
+  --headings--sm---medium: 30px;
+  --headings--sm---regular: 30px;
+  --headings--sm---light: 30px;
+  --headings--xs---black: 24px;
+  --headings--xs---extra--bold: 24px;
+  --headings--xs---bold: 24px;
+  --headings--xs---semi--bold: 24px;
+  --headings--xs---medium: 24px;
+  --headings--xs---regular: 24px;
+  --headings--xs---light: 24px;
+
+  /* Body */
+  --body--xl---bold: 20px;
+  --body--xl---semi--bold: 20px;
+  --body--xl---medium: 20px;
+  --body--xl---regular: 20px;
+  --body--xl---light: 20px;
+  --body--lg---bold: 18px;
+  --body--lg---semi--bold: 18px;
+  --body--lg---medium: 18px;
+  --body--lg---regular: 18px;
+  --body--lg---light: 18px;
+  --body--md---bold: 16px;
+  --body--md---semi--bold: 16px;
+  --body--md---medium: 16px;
+  --body--md---regular: 16px;
+  --body--md---light: 16px;
+  --body--sm---bold: 14px;
+  --body--sm---semi--bold: 14px;
+  --body--sm---medium: 14px;
+  --body--sm---regular: 14px;
+  --body--sm---light: 14px;
+  --body--xs---bold: 12px;
+  --body--xs---semi--bold: 12px;
+  --body--xs---medium: 12px;
+  --body--xs---regular: 12px;
+  --body--xs---light: 12px;
+  --body--2xs---bold: 10px;
+  --body--2xs---semi--bold: 10px;
+  --body--2xs---medium: 10px;
+  --body--2xs---regular: 10px;
+  --body--2xs---light: 10px;
+
+  /* Effect styles */
+  --shadows---small: 0px 2px 5px rgba(103, 110, 118, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.12);
+  --shadows---medium: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(103, 110, 118, 0.16), 0px 2px 5px rgba(103, 110, 118, 0.08);
+  --shadows---large: 0px 15px 35px rgba(103, 110, 118, 0.08), 0px 5px 15px rgba(0, 0, 0, 0.12);
+  --shadows---hover--states---primary: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(0, 0, 0, 0.64), 0px 2px 5px rgba(103, 110, 118, 0.08);
+  --shadows---hover--states---secondary:
+    0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(103, 110, 118, 0.24), 0px 2px 5px rgba(103, 110, 118, 0.08);
+  --shadows---hover--states---error: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(243, 65, 65, 0.4), 0px 2px 5px rgba(243, 65, 65, 0.08);
+  --shadows---hover--states---warning: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(233, 162, 59, 0.4), 0px 2px 5px rgba(233, 162, 59, 0.08);
+  --shadows---hover--states---success: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(83, 180, 131, 0.4), 0px 2px 5px rgba(83, 180, 131, 0.08);
+  --shadows---focus--states---primary:
+    0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(0, 0, 0, 0.64), 0px 2px 5px rgba(103, 110, 118, 0.08), 0px 0px 0px rgba(103, 110, 118, 0.16);
+  --shadows---focus--states---secondary:
+    0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(103, 110, 118, 0.16), 0px 2px 5px rgba(103, 110, 118, 0.08),
+    0px 0px 0px rgba(103, 110, 118, 0.16);
+  --shadows---focus--states---error:
+    0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(243, 65, 65, 0.16), 0px 2px 5px rgba(103, 110, 118, 0.08), 0px 0px 0px rgba(243, 65, 65, 0.16);
+  --shadows---focus--states---warning:
+    0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(233, 162, 59, 0.16), 0px 2px 5px rgba(103, 110, 118, 0.08), 0px 0px 0px rgba(233, 162, 59, 0.16);
+  --shadows---focus--states---success:
+    0px 1px 1px rgba(0, 0, 0, 0.12), 0px 0px 0px rgba(83, 180, 131, 0.16), 0px 2px 5px rgba(103, 110, 118, 0.08), 0px 0px 0px rgba(83, 180, 131, 0.16);
+}
+
 *,
 *::before,
 *::after {
@@ -17,8 +189,8 @@ body {
 
 body {
   font-family: 'Jost', sans-serif;
-  background-color: white;
-  color: black;
+  background-color: #f7f5f2;
+  color: var(--primary---black);
   -webkit-font-smoothing: antialiased;
   user-select: none;
   overflow-x: hidden;
