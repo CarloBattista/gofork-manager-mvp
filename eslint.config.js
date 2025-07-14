@@ -16,6 +16,7 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
     rules: {
       'vue/multi-word-component-names': 'off', // Disable error for single-word component names
+      'vue/no-parsing-error': 'off',
       // 'no-console': 'warn', // Warns if console.log is left in the code
       // 'no-debugger': 'error', // Disallows debugger statements
       'no-unused-vars': 'warn', // Warn for declared but unused variables
