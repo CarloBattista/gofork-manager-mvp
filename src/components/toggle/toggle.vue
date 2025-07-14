@@ -2,28 +2,19 @@
   <div @click="toggleValue" class="flex gap-2 items-center" :class="{ 'pointer-events-none': disabled }">
     <div
       tabindex="0"
-      class="checkbox relative aspect-square flex items-center justify-center"
-      :class="['size-' + size, { selected: modelValue, disabled: disabled, 'rounded-sm': !rounded, 'rounded-full': rounded }]"
+      class="checkbox relative min-w-9 max-w-[52px] min-h-5 max-h-8 rounded-full"
+      :class="['size-' + size, { selected: modelValue, disabled: disabled }]"
     >
       <input :checked="modelValue" :disabled="disabled" hidden type="checkbox" />
-      <div class="check-icon w-full h-full flex items-center justify-center">
-        <Check v-if="modelValue" color="white" />
-      </div>
+      <div class="checkbox-dot absolute aspect-square rounded-full"></div>
     </div>
     <span v-if="label" class="checkbox-label font-semibold">{{ label }}</span>
   </div>
 </template>
 
 <script>
-// ICONS
-import { Check } from 'lucide-vue-next';
-
 export default {
-  name: 'checkbox',
-  components: {
-    // ICONS
-    Check,
-  },
+  name: 'toggle',
   props: {
     modelValue: {
       type: Boolean,
@@ -34,10 +25,6 @@ export default {
       default: 'md',
     },
     label: String,
-    rounded: {
-      type: Boolean,
-      default: false,
-    },
     disabled: {
       type: Boolean,
       default: false,
@@ -140,29 +127,32 @@ export default {
 
 /* Sizes */
 .checkbox.size-sm {
-  height: 16px;
+  width: 36px;
+  height: 20px;
+  padding: 2px;
 }
 
-.checkbox.size-sm .check-icon {
-  width: 12px;
-  height: 12px;
+.checkbox.size-sm .checkbox-dot {
+  height: 16px;
 }
 
 .checkbox.size-md {
-  height: 20px;
+  width: 44px;
+  height: 24px;
+  padding: 2px 3px;
 }
 
-.checkbox.size-md .check-icon {
-  width: 16px;
-  height: 16px;
+.checkbox.size-md .checkbox-dot {
+  height: 20px;
 }
 
 .checkbox.size-lg {
-  height: 24px;
+  width: 52px;
+  height: 32px;
+  padding: 2px 4px;
 }
 
-.checkbox.size-lg .check-icon {
-  width: 20px;
-  height: 20px;
+.checkbox.size-lg .checkbox-dot {
+  height: 24px;
 }
 </style>
