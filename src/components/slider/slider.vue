@@ -69,27 +69,18 @@ export default {
       return ((this.currentValue - this.min) / (this.max - this.min)) * 100;
     },
     previewPosition() {
-      // Calcola la posizione del preview con offset per evitare overflow
-      const basePosition = this.percentage;
+      // Calcola l'offset per evitare che la preview esca dal contenitore
+      const position = this.percentage;
+      const previewWidth = 8; // Stima della larghezza della preview in percentuale
+      const halfPreviewWidth = previewWidth / 2;
 
-      // Stima la larghezza del preview (circa 4-6 caratteri + padding)
-      const estimatedPreviewWidth = Math.max(40, this.currentValue.toString().length * 8 + 16);
-
-      // Calcola l'offset necessario basato sulla larghezza stimata
-      const halfPreviewWidth = estimatedPreviewWidth / 2;
-
-      // Se siamo vicini al bordo sinistro
-      if (basePosition < 10) {
-        return Math.max(halfPreviewWidth / 10, basePosition);
+      if (position < halfPreviewWidth) {
+        return 5 - halfPreviewWidth;
       }
-
-      // Se siamo vicini al bordo destro
-      if (basePosition > 90) {
-        return Math.min(100 - halfPreviewWidth / 10, basePosition);
+      if (position > 100 - halfPreviewWidth) {
+        return 100 - halfPreviewWidth;
       }
-
-      // Posizione normale al centro
-      return basePosition;
+      return position;
     },
     showPreview() {
       return this.isHovering || this.isDragging;
