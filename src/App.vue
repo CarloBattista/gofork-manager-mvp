@@ -46,12 +46,27 @@ export default {
         console.error(e);
       }
     },
+    async getProfile() {
+      if (!this.auth.user?.id) return;
+
+      try {
+        const { data, error } = await supabase.from('profiles').select('*').eq('user_id', this.auth.user.id).single();
+
+        if (!error) {
+          // console.log(data);
+          this.auth.profile = data;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
   },
   watch: {
     'auth.user': {
       handler(value) {
         if (value) {
           this.getSession();
+          this.getProfile();
         }
       },
       deep: true,

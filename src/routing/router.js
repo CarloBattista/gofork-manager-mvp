@@ -63,7 +63,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const pageTitle = to.meta.title;
   if (pageTitle) {
     document.title = pageTitle;
@@ -71,13 +71,12 @@ router.beforeEach((to, from, next) => {
     document.title = 'GoFork Manager';
   }
 
-  // Controlla lo stato di autenticazione
   const isAuthenticated = localStorage.getItem('isAuthenticated');
   const authIsParsed = JSON.parse(isAuthenticated);
 
   // Se la rotta richiede di essere ospite (non autenticato) e l'utente è autenticato
   if (to.meta.requiresGuest && authIsParsed) {
-    next({ name: 'dashboard' }); // Reindirizza alla home
+    next({ name: 'home' }); // Reindirizza alla home
     return;
   }
 
@@ -87,7 +86,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  next(); // Procedi normalmente
+  next();
 });
 
 export default router;
