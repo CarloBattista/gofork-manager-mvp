@@ -1,6 +1,9 @@
 <template>
   <div class="w-full">
     <div class="max-w-[450px] mx-auto md:px-7 px-4 pt-28">
+      <div class="w-full mb-16 flex items-center justify-center">
+        <logo type="full" class="max-w-[120px]" />
+      </div>
       <div class="w-full mb-8 flex flex-col gap-2">
         <h2 class="text-3xl font-semibold">Scegli una nuova password</h2>
       </div>
@@ -56,6 +59,7 @@ import { supabase } from '../../lib/supabase';
 import { auth } from '../../data/auth';
 import { PASSWORD_PATTERNS, validatePasswordRequirements } from '../../lib/password_validation';
 
+import logo from '../../components/global/logo.vue';
 import inputText from '../../components/input/input-text.vue';
 import buttonLg from '../../components/button/button-lg.vue';
 import snackbar from '../../components/snackbar/snackbar.vue';
@@ -64,6 +68,7 @@ import bulletPoint from '../../components/bullet/bullet-point.vue';
 export default {
   name: 'Password-reset',
   components: {
+    logo,
     inputText,
     buttonLg,
     snackbar,

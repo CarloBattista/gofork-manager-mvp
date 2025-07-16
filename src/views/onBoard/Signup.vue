@@ -1,6 +1,9 @@
 <template>
   <div class="w-full">
     <div class="max-w-[450px] mx-auto md:px-7 px-4 pt-28">
+      <div class="w-full mb-16 flex items-center justify-center">
+        <logo type="full" class="max-w-[120px]" />
+      </div>
       <div class="w-full mb-8 flex flex-col gap-2">
         <h2 class="text-3xl font-semibold">Registrati</h2>
         <p class="text-sm font-normal text-start">
@@ -55,6 +58,7 @@ import { PASSWORD_PATTERNS, validatePasswordRequirements } from '../../lib/passw
 
 import supportedDomains from '../../json/supported_domains.json';
 
+import logo from '../../components/global/logo.vue';
 import inputText from '../../components/input/input-text.vue';
 import buttonLg from '../../components/button/button-lg.vue';
 import snackbar from '../../components/snackbar/snackbar.vue';
@@ -63,6 +67,7 @@ import bulletPoint from '../../components/bullet/bullet-point.vue';
 export default {
   name: 'Signup',
   components: {
+    logo,
     inputText,
     buttonLg,
     snackbar,

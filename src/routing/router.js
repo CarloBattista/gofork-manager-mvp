@@ -17,28 +17,28 @@ const routes = [
     name: 'signup',
     component: Signup,
     props: true,
-    meta: { title: 'GoFork • Signup', requiresGuest: true },
+    meta: { title: 'GoFork Manager • Signup', requiresGuest: true },
   },
   {
     path: '/signin',
     name: 'signin',
     component: Signin,
     props: true,
-    meta: { title: 'GoFork • Signin', requiresGuest: true },
+    meta: { title: 'GoFork Manager • Signin', requiresGuest: true },
   },
   {
     path: '/forgot-password',
     name: 'forgot-password',
     component: ForgotPassword,
     props: true,
-    meta: { title: 'GoFork • Password dimenticata', requiresGuest: true },
+    meta: { title: 'GoFork Manager • Password dimenticata', requiresGuest: true },
   },
   {
     path: '/password-reset',
     name: 'password-reset',
     component: PasswordReset,
     props: true,
-    meta: { title: 'GoFork • Reimposta la nuova password', requiresGuest: true },
+    meta: { title: 'GoFork Manager • Reimposta la nuova password', requiresGuest: true },
   },
 
   // General
@@ -47,14 +47,14 @@ const routes = [
     name: 'home',
     component: Home,
     props: true,
-    meta: { title: 'GoFork • Home', requiresGuest: true },
+    meta: { title: 'GoFork Manager • Home' },
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: Dashboard,
     props: true,
-    meta: { title: 'GoFork • Dashboard', requiresAuth: true },
+    meta: { title: 'GoFork Manager • Dashboard', requiresAuth: true },
   },
 ];
 
@@ -68,7 +68,7 @@ router.beforeEach((to, from, next) => {
   if (pageTitle) {
     document.title = pageTitle;
   } else {
-    document.title = 'GoFork';
+    document.title = 'GoFork Manager';
   }
 
   // Controlla lo stato di autenticazione
