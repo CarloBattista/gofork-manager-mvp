@@ -10,7 +10,7 @@ const routes = [
     name: 'home',
     component: Home,
     props: true,
-    meta: { title: 'GoFork • Home' },
+    meta: { title: 'GoFork • Home', requiresGuest: true },
   },
 ];
 
@@ -26,6 +26,22 @@ router.beforeEach((to, from, next) => {
   } else {
     document.title = 'GoFork';
   }
+
+  const isAuthenticated = localStorage.getItem('isAuthenticated');
+  const authIsParsed = JSON.parse(isAuthenticated);
+
+  // Se la rotta richiede di essere ospite (non autenticato) e l'utente è autenticato
+  if (to.meta.requiresGuest && authIsParsed) {
+    next({ name: 'home' }); // Reindirizza alla home
+    return;
+  }
+
+  // Se la rotta richiede autenticazione e l'utente non è autenticato
+  if (to.meta.requiresAuth && !authIsParsed) {
+    next({ name: 'signin' }); // Reindirizza al signin
+    return;
+  }
+
   next();
 });
 
