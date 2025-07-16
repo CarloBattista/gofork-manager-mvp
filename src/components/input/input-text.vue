@@ -5,19 +5,29 @@
       @focus="handleFocus"
       @blur="handleBlur"
       tabindex="0"
-      class="input-container relative h-12 pl-3.5 pr-12 rounded-lg flex items-center justify-start"
-      :class="{ 'cursor-text': !disabled, error: error }"
+      class="input-container relative h-12 rounded-lg flex items-center justify-start"
+      :class="{
+        'px-3.5': type !== 'password' || !isDropdown,
+        'pr-12': type === 'password' || isDropdown,
+        'cursor-text': !disabled && !isDropdown,
+        error: error,
+      }"
     >
       <input
+        v-if="!isDropdown"
         @focus="handleFocus"
         @blur="handleBlur"
         @input="updateValue"
         :value="modelValue"
         :id="forLabel"
         :type="inputType"
+        :readonly="readOnly"
         :disabled="disabled"
         class="w-full h-full outline-0"
       />
+      <div v-else-if="isDropdown" class="w-full h-full flex items-center justify-start">
+        <p>{{ modelValue }}</p>
+      </div>
       <div
         v-if="type === 'password'"
         @click="toggleShowPassword"
@@ -25,6 +35,9 @@
       >
         <Eye v-if="!showPassword" size="20" />
         <EyeClosed v-else size="20" />
+      </div>
+      <div v-if="isDropdown" class="absolute top-0 right-0 w-12 h-full flex items-center justify-center cursor-pointer">
+        <ChevronDown size="20" />
       </div>
     </div>
     <div v-if="error || helpText" class="mt-3 flex gap-2 items-center justify-start">
@@ -38,7 +51,7 @@
 
 <script>
 // ICONS
-import { Eye, EyeClosed, BadgeQuestionMark } from 'lucide-vue-next';
+import { Eye, EyeClosed, BadgeQuestionMark, ChevronDown } from 'lucide-vue-next';
 
 export default {
   name: 'input-text',
@@ -47,6 +60,7 @@ export default {
     Eye,
     EyeClosed,
     BadgeQuestionMark,
+    ChevronDown,
   },
   props: {
     modelValue: {
@@ -62,6 +76,14 @@ export default {
     helpText: String,
     error: String,
     required: Boolean,
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
+    isDropdown: {
+      type: Boolean,
+      default: false,
+    },
     disabled: {
       type: Boolean,
       default: false,

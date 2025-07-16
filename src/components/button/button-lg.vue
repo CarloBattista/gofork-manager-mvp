@@ -214,6 +214,26 @@ export default {
   color: var(--grey--300);
 }
 
+/* Text only */
+.btn-lg.variant-text-only {
+  height: fit-content;
+  min-height: fit-content;
+  padding: unset;
+  outline-color: transparent;
+}
+
+.btn-lg.variant-text-only:hover {
+  color: var(--grey--900);
+}
+
+.btn-lg.variant-text-only:focus {
+  color: var(--primary---black);
+}
+
+.btn-lg.variant-text-only:disabled {
+  color: var(--grey--300);
+}
+
 .loader {
   width: 26px;
   aspect-ratio: 1;

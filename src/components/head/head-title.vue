@@ -1,0 +1,52 @@
+<template>
+  <div class="w-full flex items-center justify-between">
+    <div class="flex gap-2 items-center justify-start">
+      <div @click="historyBack" title="Indietro" class="h-full cursor-pointer">
+        <ArrowLeft />
+      </div>
+      <h2 class="text-black font-semibold" :class="{ 'text-2xl': !sub, 'text-xl': sub }">{{ head }}</h2>
+    </div>
+    <div v-if="actions" class="flex gap-2 items-center justify-end">
+      <slot name="actions"></slot>
+    </div>
+  </div>
+</template>
+
+<script>
+// ICONS
+import { ArrowLeft } from 'lucide-vue-next';
+
+export default {
+  name: 'head-title',
+  components: {
+    // ICONS
+    ArrowLeft,
+  },
+  props: {
+    sub: {
+      type: Boolean,
+      default: false,
+    },
+    actions: {
+      type: Boolean,
+      default: false,
+    },
+    backTo: String,
+    head: {
+      type: String,
+      default: 'Heading',
+    },
+  },
+  methods: {
+    historyBack() {
+      if (this.backTo) {
+        this.$router.push({ name: this.backTo });
+      } else {
+        this.$router.back();
+      }
+    },
+  },
+};
+</script>
+
+<style scoped></style>
