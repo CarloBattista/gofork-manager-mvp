@@ -1,5 +1,5 @@
 <template>
-  <div ref="dropdownContainer" class="relative min-w-[200px]">
+  <div ref="dropdownContainer" class="relative">
     <div @click="toggleDropdown" class="w-full p-2 pb-0 cursor-pointer">
       <slot name="trigger"></slot>
     </div>

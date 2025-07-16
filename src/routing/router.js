@@ -10,6 +10,9 @@ import PasswordReset from '../views/onBoard/Password-reset.vue';
 import Home from '../views/Home.vue';
 import Dashboard from '../views/Dashboard.vue';
 
+// Profile
+import CompleteProfile from '../views/Profile/Complete-profile.vue';
+
 const routes = [
   // OnBoard
   {
@@ -55,6 +58,15 @@ const routes = [
     component: Dashboard,
     props: true,
     meta: { title: 'GoFork Manager • Dashboard', requiresAuth: true },
+  },
+
+  // Profile
+  {
+    path: '/complete-profile',
+    name: 'complete-profile',
+    component: CompleteProfile,
+    props: true,
+    meta: { title: 'GoFork Manager • Completa il profilo', requiresAuth: true },
   },
 ];
 

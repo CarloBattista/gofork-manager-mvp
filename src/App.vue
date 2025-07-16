@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterView />
+    <RouterView @load-profile="getProfile" />
   </div>
 </template>
 
@@ -50,7 +50,7 @@ export default {
       if (!this.auth.user?.id) return;
 
       try {
-        const { data, error } = await supabase.from('profiles').select('*').eq('user_id', this.auth.user.id).single();
+        const { data, error } = await supabase.from('profiles').select('*').eq('user_id', this.auth.user.id).maybeSingle();
 
         if (!error) {
           // console.log(data);
