@@ -1,16 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+// OnBoard
+import Signin from '../views/onBoard/Signin.vue';
+
 // General
 import Home from '../views/Home.vue';
 
 const routes = [
   // General
   {
+    path: '/signin',
+    name: 'signin',
+    component: Signin,
+    props: true,
+    meta: { title: 'GoFork • Signin' },
+  },
+
+  // General
+  {
     path: '/',
     name: 'home',
     component: Home,
     props: true,
-    meta: { title: 'GoFork • Home', requiresGuest: true },
+    meta: { title: 'GoFork • Home' },
   },
 ];
 
@@ -26,22 +38,6 @@ router.beforeEach((to, from, next) => {
   } else {
     document.title = 'GoFork';
   }
-
-  const isAuthenticated = localStorage.getItem('isAuthenticated');
-  const authIsParsed = JSON.parse(isAuthenticated);
-
-  // Se la rotta richiede di essere ospite (non autenticato) e l'utente è autenticato
-  if (to.meta.requiresGuest && authIsParsed) {
-    next({ name: 'home' }); // Reindirizza alla home
-    return;
-  }
-
-  // Se la rotta richiede autenticazione e l'utente non è autenticato
-  if (to.meta.requiresAuth && !authIsParsed) {
-    next({ name: 'signin' }); // Reindirizza al signin
-    return;
-  }
-
   next();
 });
 
