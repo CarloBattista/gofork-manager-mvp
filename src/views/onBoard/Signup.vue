@@ -2,7 +2,10 @@
   <div class="w-full">
     <div class="max-w-[450px] mx-auto md:px-7 px-4 pt-28">
       <div class="w-full mb-8 flex flex-col gap-2">
-        <h2 class="text-3xl font-semibold">Scegli una nuova password</h2>
+        <h2 class="text-3xl font-semibold">Registrati</h2>
+        <p class="text-sm font-normal text-start">
+          Hai già un account GoFork? <RouterLink to="/signin" class="font-semibold underline">Accedi</RouterLink>
+        </p>
       </div>
       <snackbar
         v-if="user.error.general"
@@ -15,14 +18,8 @@
         class="mb-4"
       />
       <form @submit.prevent class="w-full flex flex-col gap-2">
+        <inputText v-model="user.data.email" type="email" label="Email address" :error="user.error.email" :required="true" />
         <inputText v-model="user.data.password" type="password" label="Password" :error="user.error.password" :required="true" />
-        <inputText
-          v-model="user.data.confirm_password"
-          type="password"
-          label="Conferma password"
-          :error="user.error.confirm_password"
-          :required="true"
-        />
         <div class="w-full flex flex-col gap-2">
           <bulletPoint :state="passwordRequirements.minLength ? 'success' : 'error'" label="La password deve contenere almeno 8 caratteri" />
           <bulletPoint
@@ -37,11 +34,11 @@
           <bulletPoint :state="passwordRequirements.hasSymbol ? 'success' : 'error'" label="La password deve contenere almeno un simbolo" />
         </div>
         <buttonLg
-          @click="actionResetPassword"
+          @click="actionSignup"
           type="submit"
           size="lg"
           variant="primary"
-          label="Salva la nuova password"
+          label="Continua"
           :loading="user.loading"
           :disabled="user.loading"
           class="mt-8"
@@ -56,13 +53,15 @@ import { supabase } from '../../lib/supabase';
 import { auth } from '../../data/auth';
 import { PASSWORD_PATTERNS, validatePasswordRequirements } from '../../lib/password_validation';
 
+import supportedDomains from '../../json/supported_domains.json';
+
 import inputText from '../../components/input/input-text.vue';
 import buttonLg from '../../components/button/button-lg.vue';
 import snackbar from '../../components/snackbar/snackbar.vue';
 import bulletPoint from '../../components/bullet/bullet-point.vue';
 
 export default {
-  name: 'Password-reset',
+  name: 'Signup',
   components: {
     inputText,
     buttonLg,
@@ -75,15 +74,14 @@ export default {
 
       user: {
         data: {
+          email: '',
           password: '',
-          confirm_password: '',
         },
         error: {
+          email: null,
           password: null,
-          confirm_password: null,
           general: null,
         },
-        session: null,
         loading: false,
       },
     };
@@ -94,6 +92,21 @@ export default {
     },
   },
   methods: {
+    validateEmail() {
+      const supportedDomainsPattern = supportedDomains.join('|');
+      const emailRegex = new RegExp(`^[^\\s@]+@(${supportedDomainsPattern})\\.(com|it|org|net|edu|gov|io)$`, 'i');
+
+      if (!this.user.data.email) {
+        this.user.error.email = 'Inserisci un indirizzo email';
+        return false;
+      } else if (!emailRegex.test(this.user.data.email)) {
+        this.user.error.email = 'Inserisci un indirizzo email valido';
+        return false;
+      } else {
+        this.user.error.email = null;
+        return true;
+      }
+    },
     validatePassword() {
       this.user.error.password = null;
       this.user.error.confirm_password = null;
@@ -143,37 +156,27 @@ export default {
       return true;
     },
 
-    async retrieveSession() {
-      try {
-        const { data, error } = await supabase.auth.getSession();
-
-        if (!error && !data.session) {
-          this.user.session = data.session || 'session_has_expired';
-          this.user.error.general = 'La sessione è scaduta';
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async actionResetPassword() {
+    async actionSignup() {
       this.user.loading = true;
       this.user.error.general = null;
 
+      const isEmailValid = this.validateEmail();
       const isPasswordValid = this.validatePassword();
 
-      if (!isPasswordValid || this.user.session === 'session_has_expired') {
+      if (!isEmailValid || !isPasswordValid) {
         this.user.loading = false;
         return;
       }
 
       try {
-        const { error } = await supabase.auth.updateUser({
+        const { error } = await supabase.auth.signUp({
+          email: this.user.data.email,
           password: this.user.data.password,
         });
 
         if (!error) {
           // console.log(data);
-          this.$router.push({ name: 'dashboard' });
+          this.$router.push({ name: 'signin' });
         }
       } catch (e) {
         console.error(e);
@@ -181,9 +184,6 @@ export default {
         this.user.loading = false;
       }
     },
-  },
-  mounted() {
-    this.retrieveSession();
   },
 };
 </script>
