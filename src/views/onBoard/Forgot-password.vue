@@ -2,9 +2,14 @@
   <div class="w-full">
     <div class="max-w-[450px] mx-auto md:px-7 px-4 pt-28">
       <div class="w-full mb-8 flex flex-col gap-2">
-        <h2 class="text-3xl font-semibold">Accedi</h2>
+        <h2 class="text-3xl font-semibold">{{ user.sent ? "L'email per reimpostare la password è stata inviata" : 'Reimposta password' }}</h2>
         <p class="text-sm font-normal text-start">
-          Sei appena arrivato su GoFork? <RouterLink to="/signup" class="font-semibold underline">Registrati</RouterLink>
+          {{
+            user.sent
+              ? 'Le istruzioni per reimpostare la password sono state inviate a ' + user.data.email
+              : "Comunicaci l'indirizzo email e ti invieremo delle istruzioni facili da seguire per modificare la tua password."
+          }}
+          <RouterLink to="/signin" class="font-semibold underline">Torna al login</RouterLink>
         </p>
       </div>
       <snackbar
@@ -17,23 +22,30 @@
         :body="user.error.general"
         class="mb-4"
       />
-      <form @submit.prevent class="w-full flex flex-col gap-2">
+      <form v-if="!user.sent" @submit.prevent class="w-full flex flex-col gap-2">
         <inputText v-model="user.data.email" type="email" label="Email address" :error="user.error.email" :required="true" />
-        <inputText v-model="user.data.password" type="password" label="Password" :error="user.error.password" :required="true" />
-        <div class="w-full flex items-center justify-end">
-          <RouterLink to="/forgot-password" class="font-semibold underline">Password dimenticata?</RouterLink>
-        </div>
         <buttonLg
-          @click="actionSignin"
+          @click="sendPasswordReset"
           type="submit"
           size="lg"
           variant="primary"
-          label="Continua"
+          label="Invia"
           :loading="user.loading"
           :disabled="user.loading"
           class="mt-8"
         />
       </form>
+      <buttonLg
+        v-else-if="user.sent"
+        @click="sendPasswordReset"
+        type="submit"
+        size="lg"
+        variant="secondary-color"
+        :label="user.cooldownActive ? `Riprova tra ${user.cooldownTime} secondi` : 'Inviami di nuovo l\'email'"
+        :loading="user.loading"
+        :disabled="user.loading || user.cooldownActive"
+        class="mt-8"
+      />
     </div>
   </div>
 </template>
@@ -49,7 +61,7 @@ import buttonLg from '../../components/button/button-lg.vue';
 import snackbar from '../../components/snackbar/snackbar.vue';
 
 export default {
-  name: 'Signin',
+  name: 'Forgot-password',
   components: {
     inputText,
     buttonLg,
@@ -62,15 +74,17 @@ export default {
       user: {
         data: {
           email: '',
-          password: '',
         },
         error: {
           email: null,
-          password: null,
           general: null,
         },
+        sent: false,
         loading: false,
+        cooldownActive: false,
+        cooldownTime: 60,
       },
+      cooldownInterval: null,
     };
   },
   methods: {
@@ -89,62 +103,42 @@ export default {
         return true;
       }
     },
-    validatePassword() {
-      if (!this.user.data.password) {
-        this.user.error.password = 'Inserisci una password';
-        return false;
-      } else {
-        this.user.error.password = null;
-        return true;
-      }
-    },
-    retrieveError(error) {
-      if (error.code === 'invalid_credentials') {
-        this.user.error.general = 'Correggi indirizzo email e/o la password.';
-      } else {
-        this.user.error.general = 'Si è verificato un errore, riprova più tardi';
-      }
-    },
-    retrieveData() {
-      const savedEmail = this.auth.user.email;
+    startCooldown() {
+      this.user.cooldownActive = true;
+      this.user.cooldownTime = 60;
 
-      if (savedEmail) {
-        this.user.data.email = savedEmail;
-      } else {
-        this.user.data.email = '';
-      }
+      this.cooldownInterval = setInterval(() => {
+        this.user.cooldownTime--;
+
+        if (this.user.cooldownTime <= 0) {
+          this.user.cooldownActive = false;
+          clearInterval(this.cooldownInterval);
+          this.cooldownInterval = null;
+        }
+      }, 1000);
     },
 
-    async actionSignin() {
+    async sendPasswordReset() {
       this.user.loading = true;
       this.user.error.general = null;
 
       const isEmailValid = this.validateEmail();
-      const isPasswordValid = this.validatePassword();
+      const email = this.user.data.email;
 
-      if (!isEmailValid || !isPasswordValid) {
+      if (!isEmailValid) {
         this.user.loading = false;
         return;
       }
 
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: this.user.data.email,
-          password: this.user.data.password,
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: 'http://localhost:5173/password-reset',
         });
 
         if (!error) {
           // console.log(data);
-
-          this.auth.user = data.user;
-          this.auth.session = data.session;
-          this.auth.isAuthenticated = true;
-
-          localStorage.setItem('isAuthenticated', true);
-
-          this.$router.push({ name: 'dashboard' });
-        } else {
-          this.retrieveError(error);
+          this.user.sent = true;
+          this.startCooldown();
         }
       } catch (e) {
         console.error(e);
@@ -153,15 +147,10 @@ export default {
       }
     },
   },
-  watch: {
-    'auth.user': {
-      handler(value) {
-        if (value) {
-          this.retrieveData();
-        }
-      },
-      deep: true,
-    },
+  beforeUnmount() {
+    if (this.cooldownInterval) {
+      clearInterval(this.cooldownInterval);
+    }
   },
 };
 </script>

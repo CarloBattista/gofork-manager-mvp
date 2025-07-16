@@ -4,7 +4,6 @@
     <div
       @focus="handleFocus"
       @blur="handleBlur"
-      tabindex="0"
       class="input-container relative h-12 rounded-lg flex items-center justify-start"
       :class="{
         'px-3.5': type !== 'password' || !isDropdown,

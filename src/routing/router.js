@@ -2,9 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // OnBoard
 import Signin from '../views/onBoard/Signin.vue';
+import ForgotPassword from '../views/onBoard/Forgot-password.vue';
+import PasswordReset from '../views/onBoard/Password-reset.vue';
 
 // General
 import Home from '../views/Home.vue';
+import Dashboard from '../views/Dashboard.vue';
 
 const routes = [
   // General
@@ -15,6 +18,20 @@ const routes = [
     props: true,
     meta: { title: 'GoFork • Signin' },
   },
+  {
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: ForgotPassword,
+    props: true,
+    meta: { title: 'GoFork • Password dimenticata' },
+  },
+  {
+    path: '/password-reset',
+    name: 'password-reset',
+    component: PasswordReset,
+    props: true,
+    meta: { title: 'GoFork • Reimposta la nuova password' },
+  },
 
   // General
   {
@@ -23,6 +40,13 @@ const routes = [
     component: Home,
     props: true,
     meta: { title: 'GoFork • Home' },
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard,
+    props: true,
+    meta: { title: 'GoFork • Dashboard' },
   },
 ];
 
