@@ -74,7 +74,11 @@ export default {
       }
 
       try {
-        const { data, error } = await supabase.from('profile_restaurants').select('*, restaurants(*)').eq('profile_id', PROFILE_USER_ID).single();
+        const { data, error } = await supabase
+          .from('profile_restaurants')
+          .select('*, restaurants(*)')
+          .eq('profile_id', PROFILE_USER_ID)
+          .maybeSingle();
 
         if (!error) {
           // console.log(data)

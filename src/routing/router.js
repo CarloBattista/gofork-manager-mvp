@@ -88,7 +88,7 @@ router.beforeEach(async (to, from, next) => {
 
   // Se la rotta richiede di essere ospite (non autenticato) e l'utente è autenticato
   if (to.meta.requiresGuest && authIsParsed) {
-    next({ name: 'home' }); // Reindirizza alla home
+    next({ name: 'dashboard' }); // Reindirizza alla home
     return;
   }
 
