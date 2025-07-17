@@ -4,7 +4,7 @@
       <div v-if="backTo" @click="historyBack" title="Indietro" class="h-full cursor-pointer">
         <ArrowLeft />
       </div>
-      <h2 class="text-black font-semibold" :class="{ 'text-2xl': !sub, 'text-xl': sub }">{{ head }}</h2>
+      <h2 class="text-black" :class="{ 'text-2xl font-semibold': !sub, 'text-xl font-medium': sub }">{{ head }}</h2>
     </div>
     <div v-if="actions" class="flex gap-2 items-center justify-end">
       <slot name="actions"></slot>
@@ -40,7 +40,7 @@ export default {
   methods: {
     historyBack() {
       if (this.backTo) {
-        this.$router.push({ name: this.backTo });
+        window.history.back();
       } else {
         this.$router.back();
       }

@@ -21,8 +21,23 @@
         class="mb-4"
       />
       <form @submit.prevent class="w-full flex flex-col gap-2">
-        <inputText v-model="user.data.email" type="email" label="Email address" :error="user.error.email" :required="true" />
+        <inputText
+          v-model="user.data.email"
+          type="email"
+          label="Email address"
+          :readOnly="!user.editable.email"
+          :error="user.error.email"
+          :required="true"
+          :disabled="!user.editable.email"
+        />
         <inputText v-model="user.data.password" type="password" label="Password" :error="user.error.password" :required="true" />
+        <inputText
+          v-model="user.data.confirm_password"
+          type="password"
+          label="Conferma password"
+          :error="user.error.confirm_password"
+          :required="true"
+        />
         <div class="w-full flex flex-col gap-2">
           <bulletPoint :state="passwordRequirements.minLength ? 'success' : 'error'" label="La password deve contenere almeno 8 caratteri" />
           <bulletPoint
@@ -79,14 +94,22 @@ export default {
 
       user: {
         data: {
+          restaurantId: null,
           email: '',
           password: '',
+          confirm_password: '',
         },
         error: {
           email: null,
           password: null,
+          confirm_password: null,
           general: null,
         },
+        editable: {
+          email: false,
+          password: true,
+        },
+        isInvited: false,
         loading: false,
       },
     };
@@ -174,20 +197,68 @@ export default {
       }
 
       try {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: this.user.data.email,
           password: this.user.data.password,
         });
 
         if (!error) {
           // console.log(data);
-          this.$router.push({ name: 'signin' });
+          const userId = data.user.id;
+
+          if (this.user.isInvited) {
+            await this.createProfile(userId);
+          } else {
+            this.$router.push({ name: 'signin' });
+          }
         }
       } catch (e) {
         console.error(e);
       } finally {
         this.user.loading = false;
       }
+    },
+    async createProfile(userId) {
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            user_id: userId,
+            status: 'active',
+          })
+          .eq('email', this.user.data.email)
+          .eq('status', 'invited');
+
+        if (!error) {
+          this.$router.push({ name: 'signin' });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  },
+  watch: {
+    '$route.query': {
+      handler(value) {
+        const valueParsed = JSON.parse(value.invited);
+
+        if (valueParsed) {
+          this.user.isInvited = valueParsed;
+          this.user.editable.email = false;
+        } else {
+          this.user.editable.email = true;
+        }
+
+        if (value.email) {
+          this.user.data.email = value.email;
+        }
+
+        if (value.restaurantId) {
+          this.user.data.restaurantId = value.restaurantId;
+        }
+      },
+      immediate: true,
+      deep: true,
     },
   },
 };

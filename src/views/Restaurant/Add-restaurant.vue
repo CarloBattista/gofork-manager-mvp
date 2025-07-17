@@ -9,6 +9,13 @@
         <inputText v-model="fields.data.address" type="text" label="Indirizzo" :error="fields.error.address" :required="true" />
         <inputText v-model="fields.data.city" type="text" label="Città" :error="fields.error.city" :required="true" />
         <inputText v-model="fields.data.cap" type="text" label="Codice postale" :error="fields.error.cap" :required="false" />
+        <slider
+          v-model="fields.data.average_price.value"
+          :min="fields.data.average_price.min"
+          :max="fields.data.average_price.max"
+          label="Prezzo medio di un conto nel tuo ristorante"
+          valuePercent="€"
+        />
         <buttonLg
           @click="saveAndContinue"
           type="submit"
@@ -100,6 +107,7 @@ import supportedDomains from '../../json/supported_domains.json';
 import progressIndicator from '../../components/progress/progress-indicator.vue';
 import headTitle from '../../components/head/head-title.vue';
 import inputText from '../../components/input/input-text.vue';
+import slider from '../../components/slider/slider.vue';
 import buttonLg from '../../components/button/button-lg.vue';
 import iconButton from '../../components/button/icon-button.vue';
 import checkbox from '../../components/toggle/checkbox.vue';
@@ -110,6 +118,7 @@ export default {
     progressIndicator,
     headTitle,
     inputText,
+    slider,
     buttonLg,
     iconButton,
     checkbox,
@@ -158,7 +167,11 @@ export default {
           cap: '',
           latitude: '',
           longitude: '',
-          average_price: '',
+          average_price: {
+            value: 20,
+            min: 0,
+            max: 400,
+          },
 
           website: '',
           phone: '',
@@ -205,6 +218,7 @@ export default {
       this.fields.error.name = null;
       this.fields.error.address = null;
       this.fields.error.city = null;
+      this.fields.error.average_price.value = null;
       //   this.fields.error.cap = null;
       this.fields.error.phone = null;
       this.fields.error.email = null;
@@ -284,37 +298,6 @@ export default {
     },
     selectDay(day) {
       this.selectedDay = day;
-    },
-    getDayLabel(dayKey) {
-      const day = this.daysOfWeek.find((d) => d.key === dayKey);
-      return day ? day.label : '';
-    },
-    toggleH24(day) {
-      if (this.openingHours[day].h24) {
-        this.openingHours[day].closed = false;
-        // Rimuovi tutti i periods quando è selezionato h24
-        this.openingHours[day].periods = [];
-      } else {
-        // Ripristina un period di default quando h24 viene deselezionato
-        if (this.openingHours[day].periods.length === 0) {
-          this.openingHours[day].periods = [{ open: '09:00', close: '18:00' }];
-        }
-      }
-    },
-    toggleClosed(day) {
-      if (this.openingHours[day].closed) {
-        this.openingHours[day].h24 = false;
-        // Rimuovi tutti i periods quando è selezionato chiuso
-        this.openingHours[day].periods = [];
-      } else {
-        // Ripristina un period di default quando chiuso viene deselezionato
-        if (this.openingHours[day].periods.length === 0) {
-          this.openingHours[day].periods = [{ open: '09:00', close: '18:00' }];
-        }
-      }
-    },
-    toggleDayClosed(day) {
-      this.openingHours[day].closed = !this.openingHours[day].closed;
     },
     addPeriod(day) {
       this.openingHours[day].periods.push({

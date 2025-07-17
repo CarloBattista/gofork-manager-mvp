@@ -10,6 +10,10 @@ import PasswordReset from '../views/onBoard/Password-reset.vue';
 import Home from '../views/Home.vue';
 import Dashboard from '../views/Dashboard.vue';
 
+// Members
+import Members from '../views/Members/Members.vue';
+import InviteMembers from '../views/Members/Invite-members.vue';
+
 // Profile
 import CompleteProfile from '../views/Profile/Complete-profile.vue';
 
@@ -61,6 +65,22 @@ const routes = [
     component: Dashboard,
     props: true,
     meta: { title: 'GoFork Manager • Dashboard', requiresAuth: true },
+  },
+
+  // Members
+  {
+    path: '/members',
+    name: 'members',
+    component: Members,
+    props: true,
+    meta: { title: 'GoFork Manager • Gestione del team', requiresAuth: true },
+  },
+  {
+    path: '/members/invite',
+    name: 'members-invite',
+    component: InviteMembers,
+    props: true,
+    meta: { title: 'GoFork Manager', requiresAuth: true },
   },
 
   // Profile

@@ -23,7 +23,7 @@
           class="slider-preview absolute top-[-1rem] h-8 px-2 rounded-lg flex items-center justify-center font-semibold pointer-events-none transition-opacity duration-200"
           :style="{ left: previewPosition + '%', transform: 'translateX(-50%) translateY(-100%)' }"
         >
-          {{ currentValue }}
+          {{ currentValue }}<span v-if="valuePercent">{{ valuePercent }}</span>
         </div>
       </div>
     </div>
@@ -51,6 +51,10 @@ export default {
       default: 1,
     },
     label: String,
+    valuePercent: {
+      type: String,
+      default: '%',
+    },
     disabled: {
       type: Boolean,
       default: false,
