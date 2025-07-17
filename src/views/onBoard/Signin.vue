@@ -2,7 +2,7 @@
   <div class="w-full">
     <div class="max-w-[450px] mx-auto md:px-7 px-4 pt-28">
       <div class="w-full mb-16 flex items-center justify-center">
-        <logo type="full" class="max-w-[120px]" />
+        <logo type="full" logo="manager" class="max-w-[140px]" />
       </div>
       <div class="w-full mb-8 flex flex-col gap-2">
         <h2 class="text-3xl font-semibold">Accedi</h2>
