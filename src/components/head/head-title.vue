@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex items-center justify-between">
     <div class="flex gap-2 items-center justify-start">
-      <div @click="historyBack" title="Indietro" class="h-full cursor-pointer">
+      <div v-if="backTo" @click="historyBack" title="Indietro" class="h-full cursor-pointer">
         <ArrowLeft />
       </div>
       <h2 class="text-black font-semibold" :class="{ 'text-2xl': !sub, 'text-xl': sub }">{{ head }}</h2>

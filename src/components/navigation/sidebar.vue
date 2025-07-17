@@ -13,7 +13,7 @@
           <tooltip position="right" content="Dashboard" :disabled="!isMobile" class="w-full">
             <template #trigger>
               <RouterLink to="/dashboard">
-                <navItem icon="House" label="Home" />
+                <navItem icon="House" label="Dashboard" />
               </RouterLink>
             </template>
           </tooltip>

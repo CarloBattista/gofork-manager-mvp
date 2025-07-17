@@ -15,13 +15,14 @@
 
 <script>
 // ICONS
-import { Mail } from 'lucide-vue-next';
+import { Mail, X } from 'lucide-vue-next';
 
 export default {
   name: 'icon-button',
   components: {
     // ICONS
     Mail,
+    X,
   },
   props: {
     type: {
@@ -183,6 +184,13 @@ export default {
   outline-color: rgba(103, 110, 118, 0.08);
   background-color: var(--grey--50);
   color: var(--grey--300);
+}
+
+.icon-btn.variant-icon-only {
+  height: fit-content;
+  min-height: fit-content;
+  padding: unset;
+  outline-color: transparent;
 }
 
 .loader {

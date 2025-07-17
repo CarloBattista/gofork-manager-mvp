@@ -13,6 +13,9 @@ import Dashboard from '../views/Dashboard.vue';
 // Profile
 import CompleteProfile from '../views/Profile/Complete-profile.vue';
 
+// Restaurant
+import AddRestaurant from '../views/Restaurant/Add-restaurant.vue';
+
 const routes = [
   // OnBoard
   {
@@ -67,6 +70,15 @@ const routes = [
     component: CompleteProfile,
     props: true,
     meta: { title: 'GoFork Manager • Completa il profilo', requiresAuth: true },
+  },
+
+  // Restaurant
+  {
+    path: '/add-restaurant',
+    name: 'add-restaurant',
+    component: AddRestaurant,
+    props: true,
+    meta: { title: 'GoFork Manager • Aggiungi un ristorante', requiresAuth: true },
   },
 ];
 
