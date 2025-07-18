@@ -19,7 +19,7 @@
             <template #item>
               <listItem
                 @click="fields.data.role = role.value"
-                v-for="(role, roleIndex) in roles"
+                v-for="(role, roleIndex) in store.roles"
                 :selected="fields.data.role === role.value"
                 :key="roleIndex"
                 :icon="role.icon"
@@ -94,20 +94,6 @@ export default {
         },
         loading: false,
       },
-      roles: [
-        {
-          value: 'manager',
-          icon: 'ShieldUser',
-          head: 'Manager',
-          description: 'Può gestire il ristorante visualizzare tutti i dati',
-        },
-        {
-          value: 'staff',
-          icon: 'ChefHat',
-          head: 'Staff',
-          description: 'Può gestire prenotazioni, sale e tavoli',
-        },
-      ],
     };
   },
   methods: {

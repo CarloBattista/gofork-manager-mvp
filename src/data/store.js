@@ -13,7 +13,20 @@ export const store = reactive({
       loading: false,
     },
   },
-
+  roles: [
+    {
+      value: 'manager',
+      icon: 'ShieldUser',
+      head: 'Manager',
+      description: 'Può gestire il ristorante visualizzare tutti i dati',
+    },
+    {
+      value: 'staff',
+      icon: 'ChefHat',
+      head: 'Staff',
+      description: 'Può gestire prenotazioni, sale e tavoli',
+    },
+  ],
   restaurants: {
     data: null,
     error: null,

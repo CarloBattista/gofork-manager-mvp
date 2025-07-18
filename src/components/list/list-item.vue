@@ -26,7 +26,7 @@ import badge from '../../components/badge/badge.vue';
 import bulletSimple from '../../components/bullet/bullet-simple.vue';
 
 // ICONS
-import { UserRound, ShieldUser, ChefHat } from 'lucide-vue-next';
+import { UserRound, ShieldUser, ChefHat, Sparkle } from 'lucide-vue-next';
 
 export default {
   name: 'list-item',
@@ -38,6 +38,7 @@ export default {
     UserRound,
     ShieldUser,
     ChefHat,
+    Sparkle,
   },
   props: {
     selected: Boolean,

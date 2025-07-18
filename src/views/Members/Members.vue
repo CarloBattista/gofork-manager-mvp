@@ -69,7 +69,7 @@
       </div>
     </template>
   </mainView>
-  <sideModal position="right" head="Modifica membro del team">
+  <sideModal modalKey="member_edit" position="right" head="Modifica membro del team">
     <template #content>
       <div
         class="w-full mb-4 h-[54px] max-h-[54px] p-4 rounded-lg flex gap-2 items-center justify-start"
@@ -81,6 +81,37 @@
           :label="getStatusMember(store.modals.member_edit.data?.profiles.status)"
         />
       </div>
+
+      <div v-if="store.modals.member_edit.data?.profiles.status === 'active'" class="mb-4">
+        <h3 v-if="store.modals.member_edit.data?.role !== 'owner'" class="text-lg font-semibold mb-3">Modifica ruolo</h3>
+        <listContainer>
+          <template #item>
+            <listItem v-if="store.modals.member_edit.data?.role === 'owner'" icon="Sparkle" head="Proprietario" description="Può fare tutto" />
+            <listItem
+              @click="selectRole(role.value)"
+              v-for="role in store.roles"
+              v-else-if="store.modals.member_edit.data?.role !== 'owner'"
+              :selected="selectedRole === role.value"
+              :key="role.value"
+              :icon="role.icon"
+              :head="role.head"
+              :description="role.description"
+            />
+          </template>
+        </listContainer>
+        <buttonLg
+          v-if="selectedRole && selectedRole !== store.modals.member_edit.data?.role"
+          @click="updateMemberRole"
+          class="w-full mt-4"
+          type="button"
+          size="sm"
+          variant="primary"
+          label="Modifica ruolo"
+          :loading="updateRoleLoading"
+          :disabled="updateRoleLoading"
+        />
+      </div>
+
       <buttonLg
         v-if="
           (store.modals.member_edit.data?.profiles.status === 'expired' || store.modals.member_edit.data?.profiles.status === 'not_active') &&
@@ -158,6 +189,9 @@ export default {
       resendInviteLoading: false,
       revokeInviteLoading: false,
       resendInviteClicked: new Set(),
+
+      updateRoleLoading: false,
+      selectedRole: null,
     };
   },
   computed: {
@@ -174,6 +208,8 @@ export default {
     getRoleLabel(role) {
       if (role === 'owner') {
         return 'Proprietario';
+      } else if (role === 'manager') {
+        return 'Manager';
       } else if (role === 'staff') {
         return 'Dipendente';
       }
@@ -227,7 +263,11 @@ export default {
     },
     handleMember(member) {
       this.store.modals.member_edit.data = member;
+      this.selectedRole = member.role;
       this.store.modals.member_edit.isOpen = true;
+    },
+    selectRole(roleValue) {
+      this.selectedRole = roleValue;
     },
     generateInviteToken() {
       // Genera un token sicuro usando crypto API
@@ -410,6 +450,75 @@ export default {
         console.error(e);
       } finally {
         this.revokeInviteLoading = false;
+      }
+    },
+    async updateMemberRole() {
+      this.updateRoleLoading = true;
+
+      const member = this.store.modals.member_edit.data;
+      const oldRole = member.role;
+      const newRole = this.selectedRole;
+
+      try {
+        // Aggiorna il ruolo nella tabella profile_restaurants
+        const { error: updateError } = await supabase
+          .from('profile_restaurants')
+          .update({ role: newRole })
+          .eq('profile_id', member.profiles.id)
+          .eq('restaurant_id', this.store.restaurants.data.restaurant_id);
+
+        if (updateError) {
+          console.error('Errore aggiornamento ruolo:', updateError);
+          return;
+        }
+
+        // Invia email di notifica del cambio ruolo
+        const emailResult = await this.sendRoleChangeEmail({
+          email: member.profiles.email,
+          firstName: member.profiles.first_name,
+          lastName: member.profiles.last_name,
+          oldRole: oldRole,
+          newRole: newRole,
+        });
+
+        if (emailResult.success) {
+          console.log('Email di notifica inviata con successo');
+        } else {
+          console.error('Errore invio email notifica:', emailResult.error);
+        }
+
+        await this.getMembers();
+        this.store.modals.member_edit.isOpen = false;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.updateRoleLoading = false;
+      }
+    },
+    async sendRoleChangeEmail(memberData) {
+      try {
+        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-role-change-email', {
+          body: {
+            email: memberData.email,
+            firstName: memberData.firstName,
+            lastName: memberData.lastName,
+            oldRole: memberData.oldRole,
+            newRole: memberData.newRole,
+            restaurantName: this.store.restaurants.data.name || 'il nostro ristorante',
+            apiKey: import.meta.env.VITE_RESEND_API_KEY,
+          },
+        });
+
+        if (emailError) {
+          console.error('Errore invio email:', emailError);
+          return { success: false, error: emailError };
+        }
+
+        console.log('Email inviata con successo:', emailData);
+        return { success: true, data: emailData };
+      } catch (error) {
+        console.error(error);
+        return { success: false, error: error.message };
       }
     },
   },
