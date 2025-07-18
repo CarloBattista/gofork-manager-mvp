@@ -52,21 +52,25 @@ serve(async (req) => {
       to: [email],
       subject: `Aggiornamento del tuo ruolo in ${restaurantName || 'il nostro ristorante'}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">Ciao ${firstName} ${lastName}!</h2>
-          <p style="color: #666; line-height: 1.6;">Ti informiamo che il tuo ruolo in <strong>${restaurantName || 'il nostro ristorante'}</strong> è stato aggiornato.</p>
-          
-          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
-            <p style="margin: 0 0 10px 0;"><strong>Ruolo precedente:</strong> <span style="color: #dc3545;">${oldRoleLabel}</span></p>
-            <p style="margin: 0;"><strong>Nuovo ruolo:</strong> <span style="color: #28a745;">${newRoleLabel}</span></p>
-          </div>
-          
-          <p style="color: #666; line-height: 1.6;">Questo cambiamento è effettivo da ora. Se hai domande riguardo alle tue nuove responsabilità, non esitare a contattare il tuo manager.</p>
-          
-          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="color: #999; font-size: 14px; margin: 0;">Grazie per essere parte del nostro team!</p>
-          </div>
-        </div>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto">
+      <h2 style="color: #000">Ciao ${firstName} ${lastName}!</h2>
+      <p style="color: #9ea5ad; line-height: 1.6">
+        Ti informiamo che il tuo ruolo in <strong style="color: #000">${restaurantName || 'il nostro ristorante'}</strong> è stato aggiornato.
+      </p>
+
+      <div style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #000">
+        <p style="margin: 0 0 10px 0">Ruolo precedente: <strong style="color: #cd3636">${oldRoleLabel}</strong></p>
+        <p style="margin: 0">Nuovo ruolo: <strong style="color: #2f9461">${newRoleLabel}</strong></p>
+      </div>
+
+      <p style="color: #9ea5ad; line-height: 1.6">
+        Questo cambiamento è effettivo da ora. Se hai domande riguardo alle tue nuove responsabilità, non esitare a contattare il tuo manager.
+      </p>
+
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee">
+        <p style="color: #9ea5ad; font-size: 14px; margin: 0">Grazie per essere parte del nostro team!</p>
+      </div>
+    </div>
       `,
     };
 
