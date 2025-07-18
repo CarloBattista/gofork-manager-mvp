@@ -53,6 +53,11 @@ serve(async (req) => {
       subject: `Aggiornamento del tuo ruolo in ${restaurantName || 'il nostro ristorante'}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto">
+      <img
+        src="https://gdhddrktldjgjuwztqnn.supabase.co/storage/v1/object/public/gofork-company/logos/_lockups/gofork_manager_textlogo_black.png"
+        alt="GoFork Manager"
+        style="width: 140px"
+      />
       <h2 style="color: #000">Ciao ${firstName} ${lastName}!</h2>
       <p style="color: #9ea5ad; line-height: 1.6">
         Ti informiamo che il tuo ruolo in <strong style="color: #000">${restaurantName || 'il nostro ristorante'}</strong> è stato aggiornato.
