@@ -11,17 +11,16 @@ serve(async (req) => {
   }
 
   try {
-    const { email, firstName, lastName, role, restaurantName, restaurantId, apiKey, frontendUrl } = await req.json();
+    const { email, firstName, lastName, role, restaurantName, restaurantId, apiKey, frontendUrl, inviteToken } = await req.json();
 
     // Validazione dei dati
-    if (!email || !firstName || !lastName || !role) {
+    if (!email || !firstName || !lastName || !role || !inviteToken) {
       return new Response(JSON.stringify({ error: 'Dati mancanti' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Ricevi l'API key dal frontend (NON da import.meta.env)
     const resendApiKey = apiKey;
 
     if (!resendApiKey) {
@@ -36,7 +35,8 @@ serve(async (req) => {
         <h2>Ciao ${firstName} ${lastName}!</h2>
         <p>Sei stato invitato a unirti al nostro team come <strong>${role}</strong>.</p>
         <p>Clicca sul link qui sotto per completare la registrazione:</p>
-        <a href="${frontendUrl}/signup?email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}&restaurantId=${encodeURIComponent(restaurantId)}&invited=true">Completa la registrazione</a>
+        <a href="${frontendUrl}/signup?token=${encodeURIComponent(inviteToken)}">Completa la registrazione</a>
+        <p>Questo invito scadrà tra 7 giorni.</p>
         <p>Benvenuto nel team!</p>
       `,
     };

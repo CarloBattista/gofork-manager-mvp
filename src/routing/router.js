@@ -20,6 +20,9 @@ import CompleteProfile from '../views/Profile/Complete-profile.vue';
 // Restaurant
 import AddRestaurant from '../views/Restaurant/Add-restaurant.vue';
 
+// Invite
+import InvalidInvite from '../views/Invite/Invalid-invite.vue';
+
 const routes = [
   // OnBoard
   {
@@ -99,6 +102,15 @@ const routes = [
     component: AddRestaurant,
     props: true,
     meta: { title: 'GoFork Manager • Aggiungi un ristorante', requiresAuth: true },
+  },
+
+  // Invite
+  {
+    path: '/invalid-invite',
+    name: 'invalid-invite',
+    component: InvalidInvite,
+    props: true,
+    meta: { title: 'GoFork Manager' },
   },
 ];
 

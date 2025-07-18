@@ -110,6 +110,8 @@ export default {
           password: true,
         },
         isInvited: false,
+        inviteToken: null,
+        inviteData: null,
         loading: false,
       },
     };
@@ -184,6 +186,36 @@ export default {
       return true;
     },
 
+    async validateInviteToken(token) {
+      try {
+        console.log('Validating token:', token);
+        console.log('Current time:', new Date().toISOString());
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('invite_token', token)
+          .eq('status', 'invited')
+          .gt('invite_expires_at', new Date().toISOString())
+          .single();
+
+        if (error || !data) {
+          this.user.error.general = 'Invito non valido o scaduto';
+          return false;
+        }
+
+        this.user.inviteData = data;
+        this.user.data.email = data.email;
+        this.user.editable.email = false;
+        this.user.isInvited = true;
+
+        return true;
+      } catch (e) {
+        console.error(e);
+        // eslint-disable-next-line quotes
+        this.user.error.general = "Errore nella validazione dell'invito";
+        return false;
+      }
+    },
     async actionSignup() {
       this.user.loading = true;
       this.user.error.general = null;
@@ -225,8 +257,10 @@ export default {
           .update({
             user_id: userId,
             status: 'active',
+            invite_token: null, // Rimuovi il token dopo l'uso
+            invite_expires_at: null,
           })
-          .eq('email', this.user.data.email)
+          .eq('invite_token', this.user.inviteToken)
           .eq('status', 'invited');
 
         if (!error) {
@@ -239,22 +273,20 @@ export default {
   },
   watch: {
     '$route.query': {
-      handler(value) {
-        const valueParsed = JSON.parse(value.invited);
+      async handler(value) {
+        this.user.error.general = null;
 
-        if (valueParsed) {
-          this.user.isInvited = valueParsed;
-          this.user.editable.email = false;
+        if (value.token) {
+          this.user.inviteToken = value.token;
+          const isValidToken = await this.validateInviteToken(value.token);
+
+          if (!isValidToken) {
+            this.$router.push({ name: 'invalid-invite' });
+          }
         } else {
+          this.user.isInvited = false;
           this.user.editable.email = true;
-        }
-
-        if (value.email) {
-          this.user.data.email = value.email;
-        }
-
-        if (value.restaurantId) {
-          this.user.data.restaurantId = value.restaurantId;
+          this.user.data.email = '';
         }
       },
       immediate: true,

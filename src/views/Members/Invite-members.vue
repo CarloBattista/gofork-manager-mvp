@@ -144,6 +144,12 @@ export default {
 
       return isValid;
     },
+    generateInviteToken() {
+      // Genera un token sicuro usando crypto API
+      const array = new Uint8Array(32);
+      crypto.getRandomValues(array);
+      return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    },
 
     async sendInviteEmail(memberData) {
       try {
@@ -157,6 +163,7 @@ export default {
             restaurantId: this.store.restaurants.data.restaurant_id,
             apiKey: import.meta.env.VITE_RESEND_API_KEY,
             frontendUrl: import.meta.env.VITE_FRONTEND_URL || window.location.origin,
+            inviteToken: memberData.inviteToken, // Aggiungi il token
           },
         });
 
@@ -186,6 +193,11 @@ export default {
       }
 
       try {
+        const inviteToken = this.generateInviteToken();
+        const expiresAt = new Date();
+        // expiresAt.setMinutes(expiresAt.getMinutes() + 5); // Scade dopo 5 minuti
+        expiresAt.setDate(expiresAt.getDate() + 7); // Scade dopo 7 giorni
+
         const { data, error } = await supabase
           .from('profiles')
           .insert({
@@ -194,6 +206,8 @@ export default {
             role: 'user',
             status: 'invited',
             email: this.fields.data.email,
+            invite_token: inviteToken,
+            invite_expires_at: expiresAt.toISOString(),
           })
           .select('*');
 
@@ -212,10 +226,10 @@ export default {
               firstName: this.fields.data.first_name,
               lastName: this.fields.data.last_name,
               role: this.fields.data.role,
+              inviteToken: inviteToken, // Passa il token
             });
 
             if (emailResult.success) {
-              // console.log('Email di invito inviata con successo');
               this.$router.push({ name: 'members' });
             } else return;
           }
