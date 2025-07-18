@@ -2,7 +2,7 @@
   <sidebar />
   <mainView size="sm">
     <template #view>
-      <headTitle :backTo="true" :actions="true" head="Gestione del team">
+      <headTitle :backTo="true" to="dashboard" :actions="true" head="Gestione del team">
         <template #actions>
           <RouterLink to="/members/invite">
             <buttonLg type="button" size="md" variant="primary" label="invita membro nel team" />

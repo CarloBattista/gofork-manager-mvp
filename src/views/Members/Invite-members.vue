@@ -2,7 +2,7 @@
   <sidebar />
   <mainView size="sm">
     <template #view>
-      <headTitle :backTo="true" head="Aggiungi un membro al team" />
+      <headTitle :backTo="true" to="members" head="Aggiungi un membro al team" />
       <div class="w-full">
         <form @submit.prevent class="max-w-[570px] mx-auto md:px-7 px-4 pt-28">
           <headTitle :sub="true" head="Dati di contatto" class="mb-2" />

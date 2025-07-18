@@ -31,7 +31,8 @@ export default {
       type: Boolean,
       default: false,
     },
-    backTo: String,
+    backTo: Boolean,
+    to: String,
     head: {
       type: String,
       default: 'Heading',
@@ -40,7 +41,7 @@ export default {
   methods: {
     historyBack() {
       if (this.backTo) {
-        window.history.back();
+        this.$router.push({ name: this.to });
       } else {
         this.$router.back();
       }
