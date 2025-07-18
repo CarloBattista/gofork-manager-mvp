@@ -1,7 +1,7 @@
 <template>
   <div
-    class="list--item w-full px-4 py-3 flex gap-4 rounded-lg items-center justify-between cursor-pointer"
-    :class="{ 'list--item-selected': selected }"
+    class="list--item w-full px-4 py-3 flex gap-4 rounded-lg items-center justify-between"
+    :class="{ 'list--item-selected': selected, 'list--item-disabled': disabled }"
   >
     <div class="flex gap-4 items-center justify-start">
       <div v-if="icon" class="h-full aspect-square flex items-center justify-center">
@@ -45,6 +45,10 @@ export default {
     icon: String,
     head: String,
     description: String,
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -55,10 +59,19 @@ export default {
   outline-width: 1px;
   outline-offset: 0px;
   outline-color: transparent;
+  cursor: pointer;
 
   transition-property: background-color, color, opacity, transform, outline-width, outline-color;
   transition-duration: 300ms;
   transition-timing-function: ease;
+}
+
+.list--item.list--item-disabled {
+  pointer-events: none;
+  cursor: default;
+  outline-color: rgba(103, 110, 118, 0.08);
+  background-color: var(--grey--100);
+  color: var(--grey--400);
 }
 
 .list--item:hover {

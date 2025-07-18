@@ -86,7 +86,13 @@
         <h3 v-if="store.modals.member_edit.data?.role !== 'owner'" class="text-lg font-semibold mb-3">Modifica ruolo</h3>
         <listContainer>
           <template #item>
-            <listItem v-if="store.modals.member_edit.data?.role === 'owner'" icon="Sparkle" head="Proprietario" description="Può fare tutto" />
+            <listItem
+              v-if="store.modals.member_edit.data?.role === 'owner'"
+              icon="Sparkle"
+              head="Proprietario"
+              description="Può fare tutto"
+              :disabled="true"
+            />
             <listItem
               @click="selectRole(role.value)"
               v-for="role in store.roles"
