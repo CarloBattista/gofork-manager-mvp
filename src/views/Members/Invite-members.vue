@@ -145,11 +145,10 @@ export default {
             firstName: memberData.firstName,
             lastName: memberData.lastName,
             role: memberData.role,
-            restaurantName: this.store.restaurants.data.name || 'il nostro ristorante',
+            restaurantName: this.store.restaurants.data.restaurants.name || 'il nostro ristorante',
             restaurantId: this.store.restaurants.data.restaurant_id,
-            apiKey: import.meta.env.VITE_RESEND_API_KEY,
             frontendUrl: import.meta.env.VITE_FRONTEND_URL || window.location.origin,
-            inviteToken: memberData.inviteToken, // Aggiungi il token
+            inviteToken: memberData.inviteToken,
           },
         });
 

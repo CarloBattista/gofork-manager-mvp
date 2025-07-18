@@ -24,7 +24,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, firstName, lastName, oldRole, newRole, restaurantName, apiKey } = await req.json();
+    const { email, firstName, lastName, oldRole, newRole, restaurantName } = await req.json();
 
     // Validazione dei dati
     if (!email || !firstName || !lastName || !oldRole || !newRole) {
@@ -34,17 +34,21 @@ serve(async (req) => {
       });
     }
 
-    const resendApiKey = apiKey;
-
+    // Ottieni la chiave API dalle variabili d'ambiente
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    
     if (!resendApiKey) {
-      throw new Error('RESEND_API_KEY non fornita');
+      throw new Error('RESEND_API_KEY non configurata nelle variabili d\'ambiente');
     }
+
+    // Ottieni l'email mittente dalle variabili d'ambiente (opzionale)
+    const fromEmail = Deno.env.get('FROM_EMAIL') || 'onboarding@resend.dev';
 
     const oldRoleLabel = getRoleLabel(oldRole);
     const newRoleLabel = getRoleLabel(newRole);
 
     const emailData = {
-      from: 'onboarding@resend.dev',
+      from: fromEmail,
       to: [email],
       subject: `Aggiornamento del tuo ruolo in ${restaurantName || 'il nostro ristorante'}`,
       html: `
@@ -86,6 +90,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
     });
   } catch (error) {
+    console.error('Errore nella funzione send-role-change-email:', error);
     return new Response(JSON.stringify({ error: error.message }), { 
       status: 500, 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

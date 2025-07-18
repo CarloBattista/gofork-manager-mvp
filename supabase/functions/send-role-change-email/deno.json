@@ -1,3 +1,26 @@
 {
-  "imports": {}
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": [
+      "deno.window"
+    ],
+    "strict": false
+  },
+  "fmt": {
+    "files": {
+      "include": [
+        "index.ts"
+      ]
+    }
+  },
+  "lint": {
+    "files": {
+      "include": [
+        "index.ts"
+      ]
+    }
+  },
+  "imports": {
+    "std/": "https://deno.land/std@0.168.0/"
+  }
 }
