@@ -12,14 +12,15 @@
       <div class="w-full my-4">
         <searchInput v-model="search.query" @input="onSearchInput" placeholder="Cerca per email" class="ml-auto max-w-[250px]" />
       </div>
-      <listContainer>
+      <listContainer v-if="filteredMembers.length >= 1">
         <template #item>
           <listItem
             v-for="(member, memberIndex) in filteredMembers"
+            @click="handleMember(member)"
             :key="memberIndex"
             icon="UserRound"
             :head="member.profiles?.email"
-            :description="member.role"
+            :description="getRoleLabel(member.role)"
           >
             <template #badge>
               <badge v-if="member.profiles?.id === auth.profile?.id" type="simple" variant="primary" size="sm" label="Tu" />
@@ -68,6 +69,45 @@
       </div>
     </template>
   </mainView>
+  <sideModal position="right" head="Modifica membro del team">
+    <template #content>
+      <div
+        class="w-full mb-4 h-[54px] max-h-[54px] p-4 rounded-lg flex gap-2 items-center justify-start"
+        style="background-color: rgba(103, 110, 118, 0.16)"
+      >
+        <span class="text-base font-semibold">{{ store.modals.member_edit.data?.profiles.email }}</span>
+        <bulletSimple
+          :state="getStateMember(store.modals.member_edit.data?.profiles.status)"
+          :label="getStatusMember(store.modals.member_edit.data?.profiles.status)"
+        />
+      </div>
+      <buttonLg
+        v-if="
+          (store.modals.member_edit.data?.profiles.status === 'expired' || store.modals.member_edit.data?.profiles.status === 'not_active') &&
+          !resendInviteClicked.has(store.modals.member_edit.data?.profiles.id)
+        "
+        @click="resendInvite(store.modals.member_edit.data)"
+        class="w-full"
+        type="button"
+        size="sm"
+        variant="secondary"
+        label="Re-invita"
+        :loading="resendInviteLoading"
+        :disabled="resendInviteLoading"
+      />
+      <buttonLg
+        v-if="store.modals.member_edit.data?.profiles.status === 'invited'"
+        @click="revokeInvite(store.modals.member_edit.data)"
+        class="w-full"
+        type="button"
+        size="sm"
+        variant="secondary"
+        label="Ritira invito"
+        :loading="revokeInviteLoading"
+        :disabled="revokeInviteLoading"
+      />
+    </template>
+  </sideModal>
 </template>
 
 <script>
@@ -84,6 +124,7 @@ import listContainer from '../../components/list/list-container.vue';
 import listItem from '../../components/list/list-item.vue';
 import badge from '../../components/badge/badge.vue';
 import bulletSimple from '../../components/bullet/bullet-simple.vue';
+import sideModal from '../../components/modal/side-modal.vue';
 
 export default {
   name: 'Members',
@@ -97,6 +138,7 @@ export default {
     listItem,
     badge,
     bulletSimple,
+    sideModal,
   },
   data() {
     return {
@@ -113,6 +155,9 @@ export default {
         searchTimeout: null,
         loading: false,
       },
+      resendInviteLoading: false,
+      revokeInviteLoading: false,
+      resendInviteClicked: new Set(),
     };
   },
   computed: {
@@ -126,6 +171,15 @@ export default {
     },
   },
   methods: {
+    getRoleLabel(role) {
+      if (role === 'owner') {
+        return 'Proprietario';
+      } else if (role === 'staff') {
+        return 'Dipendente';
+      }
+
+      return role;
+    },
     getStateMember(status) {
       if (status === 'active') {
         return 'success';
@@ -171,6 +225,16 @@ export default {
         this.searchMembers();
       }, 400);
     },
+    handleMember(member) {
+      this.store.modals.member_edit.data = member;
+      this.store.modals.member_edit.isOpen = true;
+    },
+    generateInviteToken() {
+      // Genera un token sicuro usando crypto API
+      const array = new Uint8Array(32);
+      crypto.getRandomValues(array);
+      return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    },
 
     async getMembers() {
       this.members.loading = true;
@@ -209,6 +273,143 @@ export default {
         console.error(e);
       } finally {
         this.search.loading = false;
+      }
+    },
+    async resendInvite(member) {
+      this.resendInviteLoading = true;
+
+      const memberId = member.profiles?.id;
+
+      if (!memberId) {
+        this.resendInviteLoading = false;
+        return;
+      }
+
+      this.resendInviteClicked.add(memberId);
+
+      try {
+        const res = await this.regenerateInviteForExpiredUser(member);
+
+        if (res.success) {
+          await this.getMembers();
+          this.store.modals.member_edit.isOpen = false;
+        }
+      } catch (e) {
+        console.error(e);
+        this.resendInviteClicked.delete(memberId);
+      } finally {
+        this.resendInviteLoading = false;
+      }
+    },
+    async sendInviteEmail(memberData) {
+      try {
+        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-invite-email', {
+          body: {
+            email: memberData.email,
+            firstName: memberData.firstName,
+            lastName: memberData.lastName,
+            role: memberData.role,
+            restaurantName: this.store.restaurants.data.name || 'il nostro ristorante',
+            restaurantId: this.store.restaurants.data.restaurant_id,
+            apiKey: import.meta.env.VITE_RESEND_API_KEY,
+            frontendUrl: import.meta.env.VITE_FRONTEND_URL || window.location.origin,
+            inviteToken: memberData.inviteToken,
+          },
+        });
+
+        if (emailError) {
+          console.error('Errore invio email:', emailError);
+          return { success: false, error: emailError };
+        }
+
+        console.log('Email inviata con successo:', emailData);
+        return { success: true, data: emailData };
+      } catch (error) {
+        // eslint-disable-next-line quotes
+        console.error("Errore durante l'invio dell'email:", error);
+        return { success: false, error: error.message };
+      }
+    },
+    async regenerateInviteForExpiredUser(member) {
+      try {
+        const profileId = member.profiles?.id;
+
+        if (!profileId) {
+          return { success: false, error: 'ID profilo non trovato' };
+        }
+
+        // Genera un nuovo token di invito
+        const newInviteToken = this.generateInviteToken();
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // Scade dopo 7 giorni
+
+        // Aggiorna il profilo con il nuovo token e status
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            invite_token: newInviteToken,
+            invite_expires_at: expiresAt.toISOString(),
+            status: 'invited',
+          })
+          .eq('id', profileId);
+
+        if (updateError) {
+          console.error('Errore aggiornamento profilo:', updateError);
+          return { success: false, error: updateError.message };
+        }
+
+        // Invia la nuova email di invito
+        const emailResult = await this.sendInviteEmail({
+          email: member.profiles.email,
+          firstName: member.profiles.first_name,
+          lastName: member.profiles.last_name,
+          role: member.role,
+          inviteToken: newInviteToken,
+        });
+
+        if (!emailResult.success) {
+          console.error('Errore invio email:', emailResult.error);
+          // eslint-disable-next-line quotes
+          return { success: false, error: "Errore durante l'invio dell'email" };
+        }
+
+        console.log('Invito rigenerato con successo per:', member.profiles.email);
+        return { success: true, message: 'Invito rigenerato e inviato con successo' };
+      } catch (error) {
+        // eslint-disable-next-line quotes
+        console.error("Errore durante la rigenerazione dell'invito:", error);
+        return { success: false, error: error.message };
+      }
+    },
+    async revokeInvite(member) {
+      this.revokeInviteLoading = true;
+
+      const memberId = member.profiles?.id;
+
+      if (!memberId) {
+        this.revokeInviteLoading = false;
+        return;
+      }
+
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            status: 'not_active',
+            invite_token: null,
+            invite_expires_at: null,
+          })
+          .eq('id', memberId);
+
+        if (!error) {
+          // console.log('Invito revocato con successo');
+          await this.getMembers();
+          this.store.modals.member_edit.isOpen = false;
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.revokeInviteLoading = false;
       }
     },
   },

@@ -1,10 +1,10 @@
 <template>
   <div class="w-full flex items-center justify-between">
-    <div class="flex gap-2 items-center justify-start">
+    <div class="max-w-[70%] flex gap-2 items-center justify-start">
       <div v-if="backTo" @click="historyBack" title="Indietro" class="h-full cursor-pointer">
         <ArrowLeft />
       </div>
-      <h2 class="text-black" :class="{ 'text-2xl font-semibold': !sub, 'text-xl font-medium': sub }">{{ head }}</h2>
+      <h2 class="text-black ellipsis-text" :class="{ 'text-2xl font-semibold': !sub, 'text-xl font-medium': sub }">{{ head }}</h2>
     </div>
     <div v-if="actions" class="flex gap-2 items-center justify-end">
       <slot name="actions"></slot>
