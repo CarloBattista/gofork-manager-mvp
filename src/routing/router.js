@@ -23,6 +23,9 @@ import AddRestaurant from '../views/Restaurant/Add-restaurant.vue';
 // Invite
 import InvalidInvite from '../views/Invite/Invalid-invite.vue';
 
+// Bookings
+import Bookings from '../views/Bookings/Bookings.vue';
+
 const routes = [
   // OnBoard
   {
@@ -111,6 +114,15 @@ const routes = [
     component: InvalidInvite,
     props: true,
     meta: { title: 'GoFork Manager' },
+  },
+
+  // Bookings
+  {
+    path: '/bookings',
+    name: 'bookings',
+    component: Bookings,
+    props: true,
+    meta: { title: 'GoFork Manager • Prenotazioni', requiresAuth: true },
   },
 ];
 
