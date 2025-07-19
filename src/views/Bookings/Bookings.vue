@@ -4,7 +4,7 @@
     <template #view>
       <headTitle :actions="true" head="Prenotazioni">
         <template #actions>
-          <RouterLink to="/">
+          <RouterLink to="/add-booking">
             <buttonLg type="button" size="md" variant="primary" leftIcon="Plus" label="Aggiungi prenotazione" />
           </RouterLink>
         </template>
@@ -24,7 +24,11 @@
         </template>
         <template #body>
           <tr v-for="(booking, bookingIndex) in store.bookings.data" :key="bookingIndex" class="not-last:border-b border-solid border-black/10">
-            <tableCell class="h-[73px] pl-6 pr-4 py-3 text-start w-[190px] max-w-[190px]" :isFirst="true" :label="booking?.contact_name" />
+            <tableCell
+              class="h-[73px] pl-6 pr-4 py-3 text-start w-[190px] max-w-[190px]"
+              :isFirst="true"
+              :label="booking?.contact_name ? booking?.contact_name : '-'"
+            />
             <tableCell class="h-[73px] pl-6 pr-4 py-3 text-start w-[220px] max-w-[220px]" :label="formatDateItalian(booking?.reservation_time)" />
             <tableCell
               class="h-[73px] pl-6 pr-4 py-3 text-start w-[210px] max-w-[210px]"
@@ -42,7 +46,7 @@
                 </div>
               </template>
             </tableCell>
-            <tableCell class="h-[73px] pl-6 pr-4 py-3 text-start w-[125px] max-w-[125px]" :label="booking?.people" />
+            <tableCell class="h-[73px] pl-6 pr-4 py-3 text-start w-[125px] max-w-[125px]" :label="booking?.people ? booking?.people : '-'" />
             <tableCell class="h-[73px] pl-6 pr-4 py-3 text-start w-[150px] max-w-[150px]" :inner="true">
               <template #inner>
                 <badge :variant="getStatusBadgeProps(booking?.status).variant" size="sm" :label="getStatusBadgeProps(booking?.status).label" />

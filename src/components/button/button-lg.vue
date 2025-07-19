@@ -158,7 +158,7 @@ export default {
   color: var(--grey--300);
 }
 
-.icon-btn.variant-primary .loader {
+.btn-lg.variant-primary .loader {
   border-color: var(--primary---white);
   border-bottom-color: transparent;
 }
@@ -187,6 +187,11 @@ export default {
   outline-color: rgba(103, 110, 118, 0.08);
   background-color: var(--primary---white);
   color: var(--grey--300);
+}
+
+.btn-lg.variant-secondary-color .loader {
+  border-color: var(--primary---black);
+  border-bottom-color: transparent;
 }
 
 /* Secondary Grey */

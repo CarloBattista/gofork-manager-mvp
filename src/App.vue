@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterView @load-profile="getProfile" />
+    <RouterView @load-profile="getProfile" @load-bookings="getRestaurantBookings" />
   </div>
 </template>
 
