@@ -19,7 +19,7 @@
 
 <script>
 // ICONS
-import { Mail, ArrowRight } from 'lucide-vue-next';
+import { Mail, ArrowRight, Plus } from 'lucide-vue-next';
 
 export default {
   name: 'button-lg',
@@ -27,6 +27,7 @@ export default {
     // ICONS
     Mail,
     ArrowRight,
+    Plus,
   },
   props: {
     type: {

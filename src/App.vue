@@ -90,6 +90,29 @@ export default {
         this.store.restaurants.loading = false;
       }
     },
+    async getRestaurantBookings() {
+      this.store.bookings.loading = true;
+
+      const RESTAURANT_ID = this.store.restaurants.data.restaurant_id;
+
+      if (!RESTAURANT_ID) {
+        this.store.bookings.loading = false;
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.from('reservations').select('*, rooms(*), tables(*)').eq('restaurant_id', RESTAURANT_ID);
+
+        if (!error) {
+          // console.log(data);
+          this.store.bookings.data = data;
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.store.bookings.loading = false;
+      }
+    },
   },
   watch: {
     'auth.user': {
@@ -105,6 +128,14 @@ export default {
       handler(value) {
         if (value) {
           this.getRestaurantProfile();
+        }
+      },
+      deep: true,
+    },
+    'store.restaurants.data': {
+      handler(value) {
+        if (value) {
+          this.getRestaurantBookings();
         }
       },
       deep: true,

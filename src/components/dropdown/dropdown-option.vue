@@ -5,7 +5,7 @@
     :class="{ 'dpd-option--selected': selected === data }"
   >
     <h2 class="text-sm font-medium ellipsis-text">
-      <b>{{ data?.dial_code }}</b> {{ data?.name }}
+      <b v-if="strongLabel">{{ strongLabel }}</b> {{ label }}
     </h2>
   </div>
 </template>
@@ -14,7 +14,8 @@
 export default {
   name: 'dropdown-option',
   props: {
-    data: Object,
+    strongLabel: String,
+    label: String,
     selected: Object,
   },
 };

@@ -4,7 +4,7 @@
     <div v-if="type === 'icons' && leftIcon" class="badge-icon h-full flex items-center justify-center">
       <component :is="leftIcon" />
     </div>
-    <span v-if="label" class="badge-label font-medium">{{ label }}</span>
+    <span v-if="label" class="badge-label font-medium ellipsis-text">{{ label }}</span>
     <div v-if="type === 'icons' && rightIcon" class="badge-icon h-full flex items-center justify-center">
       <component :is="rightIcon" />
     </div>

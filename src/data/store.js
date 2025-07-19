@@ -32,4 +32,9 @@ export const store = reactive({
     error: null,
     loading: false,
   },
+  bookings: {
+    data: null,
+    error: null,
+    loading: false,
+  },
 });

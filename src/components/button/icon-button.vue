@@ -15,7 +15,7 @@
 
 <script>
 // ICONS
-import { Mail, X } from 'lucide-vue-next';
+import { Mail, X, EllipsisVertical } from 'lucide-vue-next';
 
 export default {
   name: 'icon-button',
@@ -23,6 +23,7 @@ export default {
     // ICONS
     Mail,
     X,
+    EllipsisVertical,
   },
   props: {
     type: {
