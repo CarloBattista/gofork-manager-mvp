@@ -5,7 +5,9 @@
       <headTitle head="Dashboard" class="mb-12" />
       <headTitle :sub="true" head="Azioni rapide" />
       <div class="w-full mt-4 min-h-36 grid grid-cols-2 lg:grid-cols-4 gap-6">
-        <cardAction icon="CalendarPlus" label="Nuova prenotazione" />
+        <RouterLink to="/add-booking">
+          <cardAction icon="CalendarPlus" label="Nuova prenotazione" />
+        </RouterLink>
         <cardAction icon="CopyPlus" label="Aggiungi prodotto nel menù" />
         <RouterLink to="/members">
           <cardAction icon="UserPlus" label="Aggiungi nuovo dipendente" />

@@ -12,6 +12,12 @@ export const store = reactive({
       error: {},
       loading: false,
     },
+    deleteBooking: {
+      isOpen: false,
+      data: {},
+      error: [],
+      loading: false,
+    },
   },
   roles: [
     {

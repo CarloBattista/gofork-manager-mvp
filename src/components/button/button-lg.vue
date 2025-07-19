@@ -10,7 +10,7 @@
     <div v-if="!loading && leftIcon" class="btn-icon h-full flex items-center justify-center">
       <component :is="leftIcon" />
     </div>
-    <span v-if="!loading && label" class="btn-label font-semibold">{{ label }}</span>
+    <span v-if="!loading && label" class="btn-label font-semibold ellipsis-text">{{ label }}</span>
     <div v-if="!loading && rightIcon" class="btn-icon h-full flex items-center justify-center">
       <component :is="rightIcon" />
     </div>
@@ -19,7 +19,7 @@
 
 <script>
 // ICONS
-import { Mail, ArrowRight, Plus } from 'lucide-vue-next';
+import { Mail, ArrowRight, Plus, Landmark } from 'lucide-vue-next';
 
 export default {
   name: 'button-lg',
@@ -28,6 +28,7 @@ export default {
     Mail,
     ArrowRight,
     Plus,
+    Landmark,
   },
   props: {
     type: {
@@ -218,6 +219,32 @@ export default {
   outline-color: rgba(103, 110, 118, 0.08);
   background-color: var(--grey--50);
   color: var(--grey--300);
+}
+
+/* Destructive */
+.btn-lg.variant-destructive {
+  outline-color: rgba(103, 110, 118, 0.16);
+  background-color: var(--error--600);
+  color: var(--primary---white);
+}
+
+.btn-lg.variant-destructive:hover {
+  outline-color: rgba(0, 0, 0, 0.64);
+  background-color: var(--error--900);
+  color: var(--primary---white);
+}
+
+.btn-lg.variant-destructive:focus {
+  outline-width: 4px;
+  outline-color: rgba(103, 110, 118, 0.16);
+  background-color: var(--error--400);
+  color: var(--primary---white);
+}
+
+.btn-lg.variant-destructive:disabled {
+  outline-color: rgba(103, 110, 118, 0.08);
+  background-color: var(--error--400);
+  color: var(--error--800);
 }
 
 /* Text only */

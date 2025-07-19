@@ -12,7 +12,7 @@
         type="text"
         :placeholder="placeholder"
         :disabled="disabled"
-        class="w-full h-full pl-3.5 outline-0"
+        class="w-full h-full px-3.5 outline-0"
       />
     </div>
   </div>
@@ -104,5 +104,11 @@ export default {
   outline-color: rgba(103, 110, 118, 0.08);
   background-color: var(--primary---white);
   color: var(--grey--300);
+}
+
+input {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

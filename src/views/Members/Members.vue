@@ -64,7 +64,7 @@
             stroke-width="1.213"
           ></path>
         </svg>
-        <h2 class="mb-4 text-2xl font-semibold">Nessun risultato</h2>
+        <h2 class="mb-4 text-2xl font-semibold text-center">Nessun risultato</h2>
         <buttonLg @click="clearSearch" type="button" size="md" variant="secondary-color" label="Rimuovi tutti i filtri" />
       </div>
     </template>

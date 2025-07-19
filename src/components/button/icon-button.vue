@@ -15,7 +15,7 @@
 
 <script>
 // ICONS
-import { Mail, X, EllipsisVertical } from 'lucide-vue-next';
+import { Mail, X, EllipsisVertical, Trash2 } from 'lucide-vue-next';
 
 export default {
   name: 'icon-button',
@@ -24,6 +24,7 @@ export default {
     Mail,
     X,
     EllipsisVertical,
+    Trash2,
   },
   props: {
     type: {
@@ -187,6 +188,33 @@ export default {
   color: var(--grey--300);
 }
 
+/* Destructive */
+.icon-btn.variant-destructive {
+  outline-color: rgba(103, 110, 118, 0.16);
+  background-color: var(--error--600);
+  color: var(--primary---white);
+}
+
+.icon-btn.variant-destructive:hover {
+  outline-color: rgba(0, 0, 0, 0.64);
+  background-color: var(--error--900);
+  color: var(--primary---white);
+}
+
+.icon-btn.variant-destructive:focus {
+  outline-width: 4px;
+  outline-color: rgba(103, 110, 118, 0.16);
+  background-color: var(--error--400);
+  color: var(--primary---white);
+}
+
+.icon-btn.variant-destructive:disabled {
+  outline-color: rgba(103, 110, 118, 0.08);
+  background-color: var(--error--400);
+  color: var(--error--800);
+}
+
+/* Icon only */
 .icon-btn.variant-icon-only {
   height: fit-content;
   min-height: fit-content;
